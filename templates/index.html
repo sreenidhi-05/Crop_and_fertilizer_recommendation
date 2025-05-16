@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Crop & Fertilizer Recommendation</title>
+    <style>
+        :root {
+            --bg-color: #f5f5f5;
+            --text-color: #222;
+            --form-bg: rgba(255, 255, 255, 0.85);
+            --button-bg: #28a745;
+            --button-text: #fff;
+            --result-color: #2e7d32;
+        }
+
+        body.dark-mode {
+            --bg-color: #121212;
+            --text-color: #f0f0f0;
+            --form-bg: rgba(30, 30, 30, 0.85);
+            --button-bg: #4caf50;
+            --button-text: #fff;
+            --result-color: #a5d6a7;
+        }
+
+        body {
+            margin: 0;
+            background: url("{{ url_for('static', filename='crop.jpeg') }}") no-repeat;
+            background-size: cover;
+            color: var(--text-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background-color 0.5s ease-in-out, color 0.3s ease-in-out;
+        }
+
+        .toggle-btn {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            background: none;
+            border: 2px solid var(--text-color);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        .main-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 30px;
+            padding: 80px 20px 40px;
+            flex-wrap: wrap;
+        }
+
+        .form-box {
+            background-color: var(--form-bg);
+            padding: 25px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 340px;
+            backdrop-filter: blur(8px);
+            animation: fadeIn 1s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 10px;
+        }
+
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            border: none;
+            padding: 8px 5px;
+            font-size: 14px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .submit-container {
+    text-align: center;
+    margin-top: 20px;
+    padding-bottom: 40px; 
+}
+
+
+        .result {
+            margin-top: 15px;
+            text-align: center;
+            font-weight: bold;
+            color: var(--result-color);
+        }
+    </style>
+</head>
+
+<body>
+
+    <button class="toggle-btn" onclick="toggleMode()" id="modeToggle">🌙 Dark Mode</button>
+
+    <form method="POST" id="recommendationForm">
+        <div class="main-container">
+
+            <!-- Crop Recommendation -->
+            <div class="form-box">
+                <h2>🌾 Crop Recommendation</h2>
+                <div class="input-group"><input type="number" name="N" step="any" placeholder="Nitrogen (N)" required>
+                </div>
+                <div class="input-group"><input type="number" name="P" step="any" placeholder="Phosphorous (P)"
+                        required></div>
+                <div class="input-group"><input type="number" name="K" step="any" placeholder="Potassium (K)" required>
+                </div>
+                <div class="input-group"><input type="number" name="temperature" step="any"
+                        placeholder="Temperature (°C)" required></div>
+                <div class="input-group"><input type="number" name="humidity" step="any" placeholder="Humidity (%)"
+                        required></div>
+                <div class="input-group"><input type="number" name="ph" step="any" placeholder="pH level" required>
+                </div>
+                <div class="input-group"><input type="number" name="rainfall" step="any" placeholder="Rainfall (mm)"
+                        required></div>
+
+                {% if crop_prediction %}
+                <div class="result">🌾 Recommended Crop: {{ crop_prediction }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Fertilizer Recommendation -->
+            <div class="form-box">
+                <h2>🌱 Fertilizer Recommendation</h2>
+                <div class="input-group"><input type="number" name="moisture" step="any" placeholder="Moisture (%)"
+                        required></div>
+
+                <div class="input-group">
+                    <select name="soil_type" required>
+                        <option value="" disabled selected>Select Soil Type</option>
+                        <option value="0">Sandy</option>
+                        <option value="1">Loamy</option>
+                        <option value="2">Black</option>
+                        <option value="3">Red</option>
+                        <option value="4">Clayey</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <select name="crop_type" required>
+                        <option value="" disabled selected>Select Crop Type</option>
+                        <option value="0">Maize</option>
+                        <option value="1">Sugarcane</option>
+                        <option value="2">Cotton</option>
+                        <option value="3">Tobacco</option>
+                        <option value="4">Paddy</option>
+                        <option value="5">Barley</option>
+                        <option value="6">Wheat</option>
+                        <option value="7">Millets</option>
+                        <option value="8">Oil seeds</option>
+                        <option value="9">Pulses</option>
+                        <option value="10">Ground Nuts</option>
+                    </select>
+                </div>
+
+                {% if fertilizer_prediction %}
+                <div class="result">🌱 Recommended Fertilizer: {{ fertilizer_prediction }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="submit-container">
+            <input type="submit" value="Get Recommendations">
+        </div>
+    </form>
+
+    <script>
+        function toggleMode() {
+            document.body.classList.toggle('dark-mode');
+            const toggleText = document.getElementById('modeToggle');
+            toggleText.innerText = document.body.classList.contains('dark-mode') ? '🌞 Light Mode' : '🌙 Dark Mode';
+        }
+
+        // Auto-clear form after submission
+        document.getElementById('recommendationForm').addEventListener('submit', function () {
+            setTimeout(() => {
+                this.reset();
+            }, 500); // delay reset slightly to show result
+        });
+    </script>
+
+</body>
+
+</html>
