@@ -66,6 +66,10 @@ def index():
                            crop_prediction=crop_prediction,
                            fertilizer_prediction=fertilizer_prediction)
 
+from waitress import serve
+
 if __name__ == '__main__':
-    from waitress import serve
-    serve(app, host='0.0.0.0', port=5000)
+    from app import app
+    import os
+    port = int(os.environ.get("PORT", 5000))
+    serve(app, host='0.0.0.0', port=port)
