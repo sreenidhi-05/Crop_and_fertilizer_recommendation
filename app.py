@@ -28,6 +28,14 @@ fertilizer_dict = {
     0: 'Urea', 1: 'DAP', 2: '14-35-14', 3: '28-28', 4: '17-17-17', 5: '20-20',
     6: '10-26-26'
 }
+from flask import send_file
+
+@app.route('/download-log')
+def download_log():
+    try:
+        return send_file('predictions_log.csv', as_attachment=True)
+    except FileNotFoundError:
+        return "Log file not found. Make a prediction first.", 404
 
 def log_prediction(crop_prediction=None, fertilizer_prediction=None):
     with open('predictions_log.csv', 'a', newline='') as file:
