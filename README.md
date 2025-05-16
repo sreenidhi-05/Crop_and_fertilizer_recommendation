@@ -1,31 +1,64 @@
-# Crop and Fertilizer Recommendation - Week 2 Assignment
+# 🌾 Crop and Fertilizer Recommendation System
 
-This project involves exploratory data analysis (EDA) on a crop and fertilizer recommendation dataset. It is part of a weekly assignment and aims to understand the structure and quality of the dataset before applying machine learning models.
+This web-based application provides intelligent recommendations for both **crops** and **fertilizers** based on soil and environmental parameters.
 
-## 📁 Dataset
+🔗 **Live App**: [https://crop-and-fertilizer-recommendation-zd8g.onrender.com/](https://crop-and-fertilizer-recommendation-zd8g.onrender.com/)
 
-The dataset used in this analysis is `crop recommendation.csv`, which contains various features related to soil conditions, climate, and recommended crops.
+---
 
-## 📊 Tasks Performed
+## 🚀 Features
 
-- Imported and loaded dataset using `pandas`
-- Displayed basic statistics and structure using:
-  - `df.head()`
-  - `df.shape`
-  - `df.info()`
-- Checked for duplicates and missing values
-- (Further analysis steps may be added as the notebook progresses)
+- ✅ **Crop Recommendation** based on:
+  - Nitrogen (N), Phosphorus (P), Potassium (K)
+  - Temperature
+  - Humidity
+  - pH
+  - Rainfall
 
-## 🛠️ Technologies Used
+- ✅ **Fertilizer Suggestion** based on:
+  - Ideal vs actual soil nutrient levels
+  - Logic-based comparison for actionable advice
 
-- Python 3
-- Jupyter Notebook
-- Pandas
+- 🧠 Uses Machine Learning for crop classification
+- 🌐 User-friendly web interface built with Flask
 
-## 📌 How to Run
+---
 
-1. Clone this repository.
-2. Ensure you have Python and Jupyter installed.
-3. Place the dataset in the specified path or update the notebook with your dataset path.
-4. Run the `Week2.ipynb` notebook using Jupyter.
+## 🧰 Tech Stack
 
+- **Frontend**: HTML, CSS (via Flask templating)
+- **Backend**: Python, Flask
+- **ML Libraries**: scikit-learn, pandas, numpy
+- **Deployment**: Render
+
+---
+
+## 📦 Requirements
+
+- Python 3.7 or higher
+- Flask
+- scikit-learn
+- pandas
+- numpy
+
+---
+
+## 📊 How It Works
+
+### Crop Recommendation:
+- Trained ML model takes in environmental features and predicts the best crop to grow.
+
+### Fertilizer Suggestion:
+- Compares the input soil values with ideal nutrient ranges for the chosen crop.
+- Returns a text-based recommendation using a dictionary logic.
+
+---
+
+## 🙏 Acknowledgments
+
+- Dataset sources: Kaggle and open agricultural datasets
+- Thanks to open-source contributors and the ML community
+
+---
+
+🌱 Happy Farming!
