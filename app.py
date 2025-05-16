@@ -1,10 +1,12 @@
 from flask import Flask, render_template, request
 import pickle
 import numpy as np
+import csv
+from datetime import datetime
+from waitress import serve
 
 app = Flask(__name__)
 
-# Load models and scalers
 with open('crop_model.sav', 'rb') as f:
     crop_model = pickle.load(f)
 with open('crop_scaler.sav', 'rb') as f:
@@ -14,7 +16,6 @@ with open('fertilizer_model.sav', 'rb') as f:
 with open('fertilizer_scaler.sav', 'rb') as f:
     fertilizer_scaler = pickle.load(f)
 
-# Crop dictionary
 crop_dict = {
     1: 'Rice', 2: 'Maize', 3: 'Jute', 4: 'Cotton', 5: 'Coconut', 6: 'Papaya',
     7: 'Orange', 8: 'Apple', 9: 'Muskmelon', 10: 'Watermelon', 11: 'Grapes',
@@ -28,6 +29,15 @@ fertilizer_dict = {
     6: '10-26-26'
 }
 
+def log_prediction(crop_prediction=None, fertilizer_prediction=None):
+    with open('predictions_log.csv', 'a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow([
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            crop_prediction or "",
+            fertilizer_prediction or ""
+        ])
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     crop_prediction = None
@@ -35,7 +45,6 @@ def index():
 
     if request.method == 'POST':
         try:
-            # Crop inputs
             N = float(request.form['N'])
             P = float(request.form['P'])
             K = float(request.form['K'])
@@ -49,7 +58,6 @@ def index():
             crop_result = crop_model.predict(scaled_crop_features)
             crop_prediction = crop_dict.get(int(crop_result[0]), "Unknown")
 
-            # Fertilizer inputs
             moisture = float(request.form['moisture'])
             soil_type = float(request.form['soil_type'])
             crop_type = float(request.form['crop_type'])
@@ -59,6 +67,9 @@ def index():
             fert_result = fertilizer_model.predict(scaled_fert_features)
             fertilizer_prediction = fertilizer_dict.get(int(fert_result[0]), "Unknown")
 
+            # Log the predictions
+            log_prediction(crop_prediction, fertilizer_prediction)
+
         except Exception as e:
             crop_prediction = fertilizer_prediction = f"Error: {str(e)}"
 
@@ -66,10 +77,7 @@ def index():
                            crop_prediction=crop_prediction,
                            fertilizer_prediction=fertilizer_prediction)
 
-from waitress import serve
-
 if __name__ == '__main__':
-    from app import app
     import os
     port = int(os.environ.get("PORT", 5000))
     serve(app, host='0.0.0.0', port=port)
