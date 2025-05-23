@@ -57,7 +57,7 @@ This web-based application provides intelligent recommendations for both **crops
 ## 🙏 Acknowledgments
 
 - Dataset sources: Kaggle and open agricultural datasets
-- Thanks to open-source contributors and the ML community
+- Thanks to edunet Foundation.
 
 ---
 
